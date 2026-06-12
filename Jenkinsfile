@@ -65,15 +65,9 @@ pipeline {
             agent any
             steps {
                 sh '''
-                    echo "Vérification de la santé du conteneur..."
-                    docker ps | grep ${CONTAINER_TEST} || (echo "Le conteneur n'a pas démarré !" && exit 1)
-                    
-                    # Récupération dynamique de l'IP interne du conteneur
-                    CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_TEST})
-                    
-                    # Requête directe sur le port 80 du conteneur
-                    curl -f http://${CONTAINER_IP}:80/ | grep -q "Welcome"
-                    echo "Test d'intégration local réussi avec succès !"
+                    docker ps | grep ${CONTAINER_TEST} || (echo "Container failed to start!" && exit 1)
+                    curl -f http://172.17.0.1:${TEST_PORT}/ | grep -q "Hello world!"
+                    echo "Local integration test passed safely!"
                 '''
             }
         }
