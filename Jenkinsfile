@@ -66,7 +66,7 @@ pipeline {
             steps {
                 sh '''
                     docker ps | grep ${CONTAINER_TEST} || (echo "Container failed to start!" && exit 1)
-                    curl -f http://172.17.0.1:${TEST_PORT}/ | grep -q "Hello world!"
+                    curl -f http://172.17.0.1:${TEST_PORT}/ | grep -q "Welcome"
                     echo "Local integration test passed safely!"
                 '''
             }
